@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: User Manager
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    generate-ddl: false
+
+server:
+  port: 8080
