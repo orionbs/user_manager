@@ -6,7 +6,7 @@ RUN mvn clean package --batch-mode --update-snapshots
 RUN ls target
 
 FROM openjdk:17-alpine
-WORKDIR /home/project
-COPY --from=MAVEN /home/project/target/*.jar /home/project
+COPY --from=MAVEN /home/project/target/*.jar *.jar
+RUN ls -la
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "*.jar"]

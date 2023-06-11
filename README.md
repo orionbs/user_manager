@@ -33,7 +33,7 @@ Here is the properties, you need to fill.
 
 ```bash
 SPRING_DATASOURCE_DRIVER-CLASS-NAME : com.mysql.cj.jdbc.Driver
-SPRING_DATASOURCE_URL : jdbc:mysql://localhost:3306/plot_manage_database
+SPRING_DATASOURCE_URL : jdbc:mysql://localhost:3306/plot_manager_database
 SPRING_DATASOURCE_USERNAME : root
 SPRING_DATASOURCE_PASSWORD : root-password
 ```
