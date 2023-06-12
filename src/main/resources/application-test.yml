@@ -12,9 +12,10 @@ spring:
       ddl-auto: create-drop
     open-in-view: false
     generate-ddl: false
+    defer-datasource-initialization: false
   sql:
     init:
-      mode: always
+      mode: never
 
 logging:
   level:
