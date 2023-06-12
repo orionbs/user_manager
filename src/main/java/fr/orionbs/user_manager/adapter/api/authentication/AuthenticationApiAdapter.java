@@ -4,6 +4,7 @@ import fr.orionbs.user_manager.adapter.api.authentication.data.AuthenticationReq
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +14,7 @@ public class AuthenticationApiAdapter {
 
     @PostMapping(path = "authentication")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public AuthenticationRequest authentication(AuthenticationRequest authenticationRequest) {
+    public AuthenticationRequest authentication(@RequestBody AuthenticationRequest authenticationRequest) {
         return authenticationRequest;
     }
 
