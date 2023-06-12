@@ -11,6 +11,9 @@ spring:
       ddl-auto: update
     open-in-view: false
     generate-ddl: false
+  sql:
+    init:
+      mode: always
 
 logging:
   level:
