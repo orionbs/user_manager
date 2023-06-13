@@ -8,9 +8,11 @@ spring:
     password: root-password
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     open-in-view: false
     generate-ddl: false
+    show-sql: true
+    defer-datasource-initialization: true
   sql:
     init:
       mode: always

@@ -36,7 +36,8 @@ SPRING_DATASOURCE_DRIVER-CLASS-NAME : com.mysql.cj.jdbc.Driver
 SPRING_DATASOURCE_URL : jdbc:mysql://localhost:3306/plot_manager_database
 SPRING_DATASOURCE_USERNAME : root
 SPRING_DATASOURCE_PASSWORD : root-password
-SPRING_SQL_INIT_MODE : always | never
+SPRING_SQL_INIT_MODE : always || never
+SPRING_JPA_HIBERNATE_DEFER-DATASOURCE-INITIALISATION : true || false
 ```
 
 **Warning, the project used MySQL Driver, so you can't use any other SQL Driver.**
