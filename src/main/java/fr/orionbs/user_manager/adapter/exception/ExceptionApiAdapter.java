@@ -1,5 +1,6 @@
 package fr.orionbs.user_manager.adapter.exception;
 
+import fr.orionbs.user_manager.domain.exception.UserAuthenticationException;
 import fr.orionbs.user_manager.domain.exception.UserRegistrationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -30,6 +31,12 @@ public class ExceptionApiAdapter {
     @ResponseStatus(code = HttpStatus.CONFLICT)
     public String handleUserRegistrationException(UserRegistrationException userRegistrationException, Locale locale) {
         return exceptionMessageSource.getMessage(userRegistrationException.getMessage(), null, locale);
+    }
+
+    @ExceptionHandler({UserAuthenticationException.class})
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public String handleUserAuthenticationException(UserAuthenticationException userAuthenticationException, Locale locale) {
+        return exceptionMessageSource.getMessage(userAuthenticationException.getMessage(), null, locale);
     }
 
 }

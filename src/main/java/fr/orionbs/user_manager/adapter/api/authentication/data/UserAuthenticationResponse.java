@@ -2,8 +2,9 @@ package fr.orionbs.user_manager.adapter.api.authentication.data;
 
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
-public class AuthenticationRequest {
-    private String email;
-    private String password;
+public class UserAuthenticationResponse {
+    private UUID uuid;
 }

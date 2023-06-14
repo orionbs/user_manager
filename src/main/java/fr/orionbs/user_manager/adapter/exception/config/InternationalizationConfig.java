@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 import java.util.Locale;
 
@@ -15,15 +15,15 @@ public class InternationalizationConfig {
 
     @Bean
     public LocaleResolver localeResolver() {
-        SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.US);
-        return slr;
+        AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
+        acceptHeaderLocaleResolver.setDefaultLocale(Locale.ENGLISH);
+        return acceptHeaderLocaleResolver;
     }
 
     @Bean
     public MessageSource validatorMessageSource() {
         ReloadableResourceBundleMessageSource validatorMessageSource = new ReloadableResourceBundleMessageSource();
-        validatorMessageSource.setBasename("classpath:static/language/validators");
+        validatorMessageSource.setBasename("classpath:language/validators");
         validatorMessageSource.setDefaultEncoding("UTF-8");
         return validatorMessageSource;
     }
@@ -38,7 +38,7 @@ public class InternationalizationConfig {
     @Bean
     public MessageSource exceptionMessageSource() {
         ReloadableResourceBundleMessageSource exceptionMessageSource = new ReloadableResourceBundleMessageSource();
-        exceptionMessageSource.setBasename("classpath:static/language/exceptions");
+        exceptionMessageSource.setBasename("classpath:language/exceptions");
         exceptionMessageSource.setDefaultEncoding("UTF-8");
         return exceptionMessageSource;
     }
