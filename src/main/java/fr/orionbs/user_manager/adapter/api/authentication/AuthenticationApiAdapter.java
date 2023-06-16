@@ -4,6 +4,7 @@ import fr.orionbs.user_manager.adapter.api.authentication.data.UserAuthenticatio
 import fr.orionbs.user_manager.adapter.api.authentication.data.UserAuthenticationResponse;
 import fr.orionbs.user_manager.adapter.api.authentication.mapper.UserAuthenticationMapper;
 import fr.orionbs.user_manager.application.port.input.UserAuthenticationUseCase;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,11 @@ public class AuthenticationApiAdapter {
 
     @PostMapping(path = "authentication")
     @ResponseStatus(code = HttpStatus.OK)
-    public UserAuthenticationResponse authentication(@Valid @RequestBody UserAuthenticationRequest userAuthenticationRequest) {
+    public UserAuthenticationResponse authentication(@Valid @RequestBody UserAuthenticationRequest userAuthenticationRequest, HttpServletRequest request) {
         return userAuthenticationMapper.toResponse(
                 userAuthenticationUseCase.userAuthentication(
-                        userAuthenticationMapper.toUser(userAuthenticationRequest)
+                        userAuthenticationMapper.toUser(userAuthenticationRequest),
+                        request.getRemoteAddr()
                 )
         );
     }

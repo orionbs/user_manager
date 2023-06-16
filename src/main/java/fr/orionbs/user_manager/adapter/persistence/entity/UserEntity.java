@@ -29,6 +29,9 @@ public class UserEntity {
     private List<PasswordEntity> passwords = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<StatusHistoryEntity> statusHistories = new ArrayList<>();
+    private List<StatusEntity> statuses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<EventEntity> events = new ArrayList<>();
 
 }

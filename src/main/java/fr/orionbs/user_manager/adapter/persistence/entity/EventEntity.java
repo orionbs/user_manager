@@ -7,9 +7,9 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
-@Table(name = "status_history")
+@Table(name = "event")
 @Data
-public class StatusHistoryEntity {
+public class EventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -18,9 +18,15 @@ public class StatusHistoryEntity {
     @Column(name = "milestone", nullable = false)
     private Timestamp milestone;
 
+    @Column(name = "ip", nullable = false)
+    private String ip;
+
+    @Column(name = "result", nullable = false)
+    private boolean result;
+
     @ManyToOne
-    @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
-    private StatusEntity status;
+    @JoinColumn(name = "event_type_id", referencedColumnName = "id", nullable = false)
+    private EventTypeEntity eventType;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "uuid", nullable = false)

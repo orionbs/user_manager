@@ -4,6 +4,7 @@ import fr.orionbs.user_manager.adapter.api.registration.data.UserRegistrationReq
 import fr.orionbs.user_manager.adapter.api.registration.data.UserRegistrationResponse;
 import fr.orionbs.user_manager.adapter.api.registration.mapper.UserRegistrationMapper;
 import fr.orionbs.user_manager.application.port.input.UserRegistrationUseCase;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,11 @@ public class RegistrationApiAdapter {
 
     @PostMapping(path = "registration")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public UserRegistrationResponse registration(@Valid @RequestBody UserRegistrationRequest userRegistrationRequest) {
+    public UserRegistrationResponse registration(@Valid @RequestBody UserRegistrationRequest userRegistrationRequest, HttpServletRequest request) {
         return userRegistrationMapper.toResponse(
                 userRegistrationUseCase.userRegistration(
-                        userRegistrationMapper.toUser(userRegistrationRequest)
+                        userRegistrationMapper.toUser(userRegistrationRequest),
+                        request.getRemoteAddr()
                 )
         );
     }

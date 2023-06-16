@@ -3,8 +3,8 @@ package fr.orionbs.user_manager.adapter.persistence.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.UUID;
 
 @Entity
 @Table(name = "status")
@@ -12,13 +12,18 @@ import java.util.List;
 public class StatusEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID uuid;
 
-    @Column(name = "value", unique = true, nullable = false)
-    private String value;
+    @Column(name = "milestone", nullable = false)
+    private Timestamp milestone;
 
-    @OneToMany(mappedBy = "status")
-    private List<StatusHistoryEntity> statusHistories = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "status_type_id", referencedColumnName = "id", nullable = false)
+    private StatusTypeEntity statusType;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "uuid", nullable = false)
+    private UserEntity user;
 
 }

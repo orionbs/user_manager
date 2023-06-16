@@ -1,38 +1,43 @@
 package fr.orionbs.user_manager.adapter.persistence;
 
-import fr.orionbs.user_manager.adapter.persistence.entity.PasswordEntity;
-import fr.orionbs.user_manager.adapter.persistence.entity.StatusEntity;
-import fr.orionbs.user_manager.adapter.persistence.entity.StatusHistoryEntity;
-import fr.orionbs.user_manager.adapter.persistence.entity.UserEntity;
-import fr.orionbs.user_manager.adapter.persistence.exception.*;
+import fr.orionbs.user_manager.adapter.persistence.entity.*;
+import fr.orionbs.user_manager.adapter.persistence.exception.ConflictedUserPersistenceException;
+import fr.orionbs.user_manager.adapter.persistence.exception.UnknownEventTypePersistenceException;
+import fr.orionbs.user_manager.adapter.persistence.exception.UnknownStatusTypePersistenceException;
+import fr.orionbs.user_manager.adapter.persistence.exception.UnknownUserPersistenceException;
 import fr.orionbs.user_manager.adapter.persistence.mapper.UserPersistenceMapper;
-import fr.orionbs.user_manager.adapter.persistence.repository.PasswordRepository;
-import fr.orionbs.user_manager.adapter.persistence.repository.StatusHistoryRepository;
-import fr.orionbs.user_manager.adapter.persistence.repository.StatusRepository;
-import fr.orionbs.user_manager.adapter.persistence.repository.UserRepository;
+import fr.orionbs.user_manager.adapter.persistence.repository.*;
+import fr.orionbs.user_manager.application.port.output.ExistUserPort;
 import fr.orionbs.user_manager.application.port.output.InsertUserPort;
 import fr.orionbs.user_manager.application.port.output.SelectUserPort;
+import fr.orionbs.user_manager.domain.model.Event;
+import fr.orionbs.user_manager.domain.model.Password;
+import fr.orionbs.user_manager.domain.model.Status;
 import fr.orionbs.user_manager.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class UserPersistenceAdapter implements InsertUserPort, SelectUserPort {
+public class UserPersistenceAdapter implements InsertUserPort, SelectUserPort, ExistUserPort {
 
     private final UserRepository userRepository;
     private final PasswordRepository passwordRepository;
     private final StatusRepository statusRepository;
-    private final StatusHistoryRepository statusHistoryRepository;
+    private final StatusTypeRepository statusTypeRepository;
     private final UserPersistenceMapper userPersistenceMapper;
+    private final EventTypeRepository eventTypeRepository;
+    private final EventRepository eventRepository;
 
     @Override
     @Transactional
-    public User insertUser(User user) throws ConflictedUserPersistenceException, UnknownStatusPersistenceException, EmptyStatusHistoryPersistenceException, EmptyPasswordPersistenceException {
+    public User insertUser(User user) throws ConflictedUserPersistenceException, UnknownStatusTypePersistenceException, UnknownEventTypePersistenceException {
 
         if (userRepository.existsUserEntityByEmailIgnoreCase(user.getEmail())) {
             throw new ConflictedUserPersistenceException();
@@ -45,25 +50,44 @@ public class UserPersistenceAdapter implements InsertUserPort, SelectUserPort {
 
             userEntity = userRepository.save(userEntity);
 
+            Password password = user.getPasswords().get(0);
+
             PasswordEntity passwordEntity = new PasswordEntity();
-            passwordEntity.setValue(user.getPassword());
-            passwordEntity.setMilestone(Timestamp.from(Instant.now()));
+            passwordEntity.setValue(password.getValue());
+            passwordEntity.setMilestone(Timestamp.valueOf(password.getMilestone()));
             passwordEntity.setUser(userEntity);
 
             passwordEntity = passwordRepository.save(passwordEntity);
 
-            StatusEntity statusEntity = statusRepository.findStatusEntityByValueIgnoreCase(user.getStatus())
-                    .orElseThrow(UnknownStatusPersistenceException::new);
+            Status status = user.getStatuses().get(0);
 
-            StatusHistoryEntity statusHistoryEntity = new StatusHistoryEntity();
-            statusHistoryEntity.setMilestone(Timestamp.from(Instant.now()));
-            statusHistoryEntity.setStatus(statusEntity);
-            statusHistoryEntity.setUser(userEntity);
+            StatusTypeEntity statusTypeEntity = statusTypeRepository.findStatusTypeEntityByValueIgnoreCase(status.getStatusEnum().toString())
+                    .orElseThrow(UnknownStatusTypePersistenceException::new);
 
-            statusHistoryEntity = statusHistoryRepository.save(statusHistoryEntity);
+            StatusEntity statusEntity = new StatusEntity();
+            statusEntity.setMilestone(Timestamp.valueOf(status.getMilestone()));
+            statusEntity.setStatusType(statusTypeEntity);
+            statusEntity.setUser(userEntity);
+
+            statusEntity = statusRepository.save(statusEntity);
+
+            Event event = user.getEvents().get(0);
+
+            EventTypeEntity eventTypeEntity = eventTypeRepository.findEventTypeEntityByValueIgnoreCase(event.getEventEnum().toString())
+                    .orElseThrow(UnknownEventTypePersistenceException::new);
+
+            EventEntity eventEntity = new EventEntity();
+            eventEntity.setMilestone(Timestamp.valueOf(event.getMilestone()));
+            eventEntity.setIp(event.getIp());
+            eventEntity.setResult(event.getResult());
+            eventEntity.setEventType(eventTypeEntity);
+            eventEntity.setUser(userEntity);
+
+            eventEntity = eventRepository.save(eventEntity);
 
             userEntity.getPasswords().add(passwordEntity);
-            userEntity.getStatusHistories().add(statusHistoryEntity);
+            userEntity.getStatuses().add(statusEntity);
+            userEntity.getEvents().add(eventEntity);
 
             userEntity = userRepository.save(userEntity);
 
@@ -77,15 +101,29 @@ public class UserPersistenceAdapter implements InsertUserPort, SelectUserPort {
     @Transactional
     public User selectUserByEmail(String email) throws UnknownUserPersistenceException {
         return userRepository.findUserEntityByEmailIgnoreCase(email)
-                .map(userEntity -> {
-                    try {
-                        return userPersistenceMapper.toUser(userEntity);
-                    } catch (EmptyStatusHistoryPersistenceException e) {
-                        throw new RuntimeException(e);
-                    } catch (EmptyPasswordPersistenceException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
+                .map(userPersistenceMapper::toUser)
                 .orElseThrow(UnknownUserPersistenceException::new);
+    }
+
+    @Override
+    @Transactional
+    public User selectUserByUuid(UUID uuid) throws UnknownUserPersistenceException {
+        return userRepository.findUserEntityByUuid(uuid)
+                .map(userPersistenceMapper::toUser)
+                .orElseThrow(UnknownUserPersistenceException::new);
+    }
+
+    @Override
+    @Transactional
+    public List<User> selectUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userPersistenceMapper::toUser)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Boolean existUserByEmail(String email) {
+        return userRepository.existsUserEntityByEmailIgnoreCase(email);
     }
 }
