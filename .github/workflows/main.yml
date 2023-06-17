@@ -8,7 +8,7 @@ on:
 jobs:
 
   build:
-    name: 'Build Project Main Branch'
+    name: 'Build And Test Project Main Branch'
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
@@ -22,7 +22,7 @@ jobs:
           cache: 'maven'
 
       - name: Build with maven
-        run: mvn clean compile --update-snapshots --batch-mode
+        run: mvn clean compile test --update-snapshots --batch-mode
 
   publish:
     name: 'Publish Project Main Branch'
