@@ -1,5 +1,7 @@
 package fr.orionbs.user_manager.adapter.exception;
 
+import fr.orionbs.user_manager.domain.exception.PatternUserSelectionException;
+import fr.orionbs.user_manager.domain.exception.UnknownUserSelectionException;
 import fr.orionbs.user_manager.domain.exception.UserAuthenticationException;
 import fr.orionbs.user_manager.domain.exception.UserRegistrationException;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,18 @@ public class ExceptionApiAdapter {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public String handleUserAuthenticationException(UserAuthenticationException userAuthenticationException, Locale locale) {
         return exceptionMessageSource.getMessage(userAuthenticationException.getMessage(), null, locale);
+    }
+
+    @ExceptionHandler({UnknownUserSelectionException.class})
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public String handleUnknownUserSelectionException(UnknownUserSelectionException unknownUserSelectionException, Locale locale) {
+        return exceptionMessageSource.getMessage(unknownUserSelectionException.getMessage(), null, locale);
+    }
+
+    @ExceptionHandler({PatternUserSelectionException.class})
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public String handlePatternUserSelectionException(PatternUserSelectionException patternUserSelectionException, Locale locale) {
+        return exceptionMessageSource.getMessage(patternUserSelectionException.getMessage(), null, locale);
     }
 
 }
