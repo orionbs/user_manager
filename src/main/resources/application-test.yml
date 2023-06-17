@@ -12,14 +12,13 @@ spring:
       ddl-auto: create-drop
     open-in-view: false
     generate-ddl: false
-    defer-datasource-initialization: false
-  sql:
-    init:
-      mode: never
+  liquibase:
+    change-log: liquibase/master.xml
 
 logging:
   level:
     fr.orionbs.user_manager: debug
+    liquibase: info
 
 server:
   port: 9000

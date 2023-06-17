@@ -6,9 +6,12 @@ spring:
       ddl-auto: none
     open-in-view: false
     generate-ddl: false
-  sql:
-    init:
-      mode: never
+  liquibase:
+    change-log: liquibase/master.xml
+
+logging:
+  level:
+    liquibase: info
 
 server:
   port: 8080
