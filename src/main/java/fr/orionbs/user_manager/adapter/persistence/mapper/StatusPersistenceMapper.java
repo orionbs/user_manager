@@ -4,7 +4,6 @@ import fr.orionbs.user_manager.adapter.persistence.entity.StatusEntity;
 import fr.orionbs.user_manager.domain.model.Status;
 import fr.orionbs.user_manager.domain.model.StatusEnum;
 import fr.orionbs.user_manager.domain.model.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
