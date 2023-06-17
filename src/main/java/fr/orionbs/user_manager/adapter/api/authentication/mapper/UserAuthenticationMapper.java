@@ -20,7 +20,7 @@ public class UserAuthenticationMapper {
 
     public UserAuthenticationResponse toResponse(User user) {
         UserAuthenticationResponse userAuthenticationResponse = new UserAuthenticationResponse();
-        userAuthenticationResponse.setUuid(user.getUuid());
+        userAuthenticationResponse.setId(user.getId());
         return userAuthenticationResponse;
     }
 

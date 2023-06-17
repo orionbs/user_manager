@@ -40,7 +40,7 @@ public class EventPersistenceAdapter implements InsertEventPort {
 
         eventEntity.setEventType(eventTypeEntity);
 
-        UserEntity userEntity = userRepository.findUserEntityByUuid(event.getUser().getUuid())
+        UserEntity userEntity = userRepository.findUserEntityById(event.getUser().getId())
                 .orElseThrow(UnknownUserPersistenceException::new);
 
         eventEntity.setUser(userEntity);

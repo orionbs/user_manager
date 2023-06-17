@@ -33,7 +33,7 @@ public class UserSelectionApiAdapter {
     @ResponseStatus(code = HttpStatus.OK)
     public UserSelectionResponse getUserByUuid(@PathVariable String userUuid) {
         return userSelectionMapper.toResponse(
-                selectionUseCase.userSelectionByUuid(userUuid)
+                selectionUseCase.userSelectionById(userUuid)
         );
     }
 

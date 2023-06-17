@@ -22,7 +22,7 @@ public class UserRegistrationMapper {
 
     public UserRegistrationResponse toResponse(User user) {
         UserRegistrationResponse userRegistrationResponse = new UserRegistrationResponse();
-        userRegistrationResponse.setUuid(user.getUuid());
+        userRegistrationResponse.setId(user.getId());
         return userRegistrationResponse;
     }
 

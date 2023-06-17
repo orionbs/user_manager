@@ -11,7 +11,7 @@ public class UserSelectionMapper {
 
     public UserSelectionResponse toResponse(User user) {
         UserSelectionResponse userSelectionResponse = new UserSelectionResponse();
-        userSelectionResponse.setUuid(user.getUuid());
+        userSelectionResponse.setId(user.getId());
         userSelectionResponse.setEmail(user.getEmail());
         userSelectionResponse.setFirstName(user.getFirstName());
         userSelectionResponse.setLastName(user.getLastName());

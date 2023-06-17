@@ -8,8 +8,8 @@
     <changeSet id="user-init-schema" author="orionbs">
 
         <createTable tableName="user">
-            <column name="uuid" type="uuid">
-                <constraints nullable="false"/>
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY_KEY_USER_ID"/>
             </column>
             <column name="email" type="varchar(255)">
                 <constraints nullable="false"/>
@@ -19,8 +19,6 @@
         </createTable>
 
         <addUniqueConstraint tableName="user" columnNames="email" constraintName="UNIQUE_CONSTRAINT_USER_EMAIL"/>
-
-        <addPrimaryKey tableName="user" columnNames="uuid" constraintName="PRIMARY_KEY_USER_UUID"/>
 
     </changeSet>
 
@@ -36,7 +34,8 @@
             </column>
         </createTable>
 
-        <addUniqueConstraint tableName="event_type" columnNames="value" constraintName="UNIQUE_CONSTRAINT_EVENT_TYPE_VALUE"/>
+        <addUniqueConstraint tableName="event_type" columnNames="value"
+                             constraintName="UNIQUE_CONSTRAINT_EVENT_TYPE_VALUE"/>
 
     </changeSet>
 
@@ -52,7 +51,8 @@
             </column>
         </createTable>
 
-        <addUniqueConstraint tableName="status_type" columnNames="value" constraintName="UNIQUE_CONSTRAINT_STATUS_TYPE_VALUE"/>
+        <addUniqueConstraint tableName="status_type" columnNames="value"
+                             constraintName="UNIQUE_CONSTRAINT_STATUS_TYPE_VALUE"/>
 
     </changeSet>
 
@@ -60,8 +60,8 @@
     <changeSet id="event-init-schema" author="orionbs">
 
         <createTable tableName="event">
-            <column name="uuid" type="uuid">
-                <constraints nullable="false"/>
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY_KEY_EVENT_ID"/>
             </column>
             <column name="milestone" type="datetime">
                 <constraints nullable="false"/>
@@ -75,12 +75,10 @@
             <column name="event_type_id" type="integer">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="uuid">
+            <column name="user_id" type="integer">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <addPrimaryKey tableName="event" columnNames="uuid" constraintName="PRIMARY_KEY_EVENT_UUID"/>
 
         <addForeignKeyConstraint baseColumnNames="event_type_id" baseTableName="event"
                                  constraintName="FOREIGN_KEY_EVENT_ON_EVENT_TYPE"
@@ -88,7 +86,7 @@
 
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="event"
                                  constraintName="FOREIGN_KEY_EVENT_ON_USER"
-                                 referencedColumnNames="uuid" referencedTableName="user"/>
+                                 referencedColumnNames="id" referencedTableName="user"/>
 
     </changeSet>
 
@@ -96,8 +94,8 @@
     <changeSet id="status-init-schema" author="orionbs">
 
         <createTable tableName="status">
-            <column name="uuid" type="UUID">
-                <constraints nullable="false"/>
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY_KEY_STATUS_ID"/>
             </column>
             <column name="milestone" type="DATETIME">
                 <constraints nullable="false"/>
@@ -105,12 +103,10 @@
             <column name="status_type_id" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="UUID">
+            <column name="user_id" type="integer">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <addPrimaryKey tableName="status" columnNames="uuid" constraintName="PRIMARY_KEY_STATUS_UUID"/>
 
         <addForeignKeyConstraint baseColumnNames="status_type_id" baseTableName="status"
                                  constraintName="FOREIGN_KEY_STATUS_ON_STATUS_TYPE"
@@ -118,7 +114,7 @@
 
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="status"
                                  constraintName="FOREIGN_KEY_STATUS_ON_USER"
-                                 referencedColumnNames="uuid" referencedTableName="user"/>
+                                 referencedColumnNames="id" referencedTableName="user"/>
 
     </changeSet>
 
@@ -126,8 +122,8 @@
     <changeSet id="password-init-schema" author="orionbs">
 
         <createTable tableName="password">
-            <column name="uuid" type="uuid">
-                <constraints nullable="false"/>
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY_KEY_PASSWORD_ID"/>
             </column>
             <column name="milestone" type="datetime">
                 <constraints nullable="false"/>
@@ -135,16 +131,14 @@
             <column name="value" type="varbinary(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="uuid">
+            <column name="user_id" type="integer">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
-        <addPrimaryKey tableName="password" columnNames="uuid" constraintName="PRIMARY_KEY_PASSWORD_UUID"/>
-
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="password"
                                  constraintName="FOREIGN_KEY_PASSWORD_ON_USER"
-                                 referencedColumnNames="uuid" referencedTableName="user"/>
+                                 referencedColumnNames="id" referencedTableName="user"/>
 
     </changeSet>
 

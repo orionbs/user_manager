@@ -107,8 +107,8 @@ public class UserPersistenceAdapter implements InsertUserPort, SelectUserPort, E
 
     @Override
     @Transactional
-    public User selectUserByUuid(UUID uuid) throws UnknownUserPersistenceException {
-        return userRepository.findUserEntityByUuid(uuid)
+    public User selectUserById(Integer id) throws UnknownUserPersistenceException {
+        return userRepository.findUserEntityById(id)
                 .map(userPersistenceMapper::toUser)
                 .orElseThrow(UnknownUserPersistenceException::new);
     }

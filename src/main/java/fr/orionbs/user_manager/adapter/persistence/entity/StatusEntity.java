@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Entity
 @Table(name = "status")
@@ -12,8 +11,8 @@ import java.util.UUID;
 public class StatusEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID uuid;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(name = "milestone", nullable = false)
     private Timestamp milestone;
@@ -23,7 +22,7 @@ public class StatusEntity {
     private StatusTypeEntity statusType;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "uuid", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserEntity user;
 
 }

@@ -11,11 +11,11 @@ public class PasswordPersistenceMapper {
 
     public Password toPassword(PasswordEntity passwordEntity) {
         Password password = new Password();
-        password.setUuid(passwordEntity.getUuid());
+        password.setId(passwordEntity.getId());
         password.setMilestone(passwordEntity.getMilestone().toLocalDateTime());
         password.setValue(passwordEntity.getValue());
         User user = new User();
-        user.setUuid(passwordEntity.getUser().getUuid());
+        user.setId(passwordEntity.getUser().getId());
         password.setUser(user);
         return password;
     }

@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -19,16 +18,16 @@ public class UserSelectionService implements UserSelectionUseCase {
     private final SelectUserPort selectUserPort;
 
     @Override
-    public User userSelectionByUuid(String uuid) {
+    public User userSelectionById(String id) {
 
         try {
             // First, we need to convert uuid string to real uuid.
-            UUID userUuid = UUID.fromString(uuid);
+            Integer userId = Integer.valueOf(id);
 
             // Second, we can select the user by his uuid.
-            return selectUserPort.selectUserByUuid(userUuid);
+            return selectUserPort.selectUserById(userId);
 
-        } catch (IllegalArgumentException e) {
+        } catch (NumberFormatException e) {
             throw new PatternUserSelectionException();
         } catch (UnknownUserPersistenceException e) {
             throw new UnknownUserSelectionException();

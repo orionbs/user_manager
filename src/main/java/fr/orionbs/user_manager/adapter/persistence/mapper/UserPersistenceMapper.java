@@ -17,7 +17,7 @@ public class UserPersistenceMapper {
 
     public User toUser(UserEntity userEntity) {
         User user = new User();
-        user.setUuid(userEntity.getUuid());
+        user.setId(userEntity.getId());
         user.setEmail(userEntity.getEmail());
         user.setFirstName(userEntity.getFirstName());
         user.setLastName(userEntity.getLastName());

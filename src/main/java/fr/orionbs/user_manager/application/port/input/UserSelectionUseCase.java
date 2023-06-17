@@ -5,7 +5,7 @@ import fr.orionbs.user_manager.domain.model.User;
 import java.util.List;
 
 public interface UserSelectionUseCase {
-    User userSelectionByUuid(String uuid);
+    User userSelectionById(String uuid);
 
     List<User> userSelection();
 }

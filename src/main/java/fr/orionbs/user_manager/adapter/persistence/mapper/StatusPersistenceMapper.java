@@ -12,11 +12,11 @@ public class StatusPersistenceMapper {
 
     public Status toStatus(StatusEntity statusEntity) {
         Status status = new Status();
-        status.setUuid(statusEntity.getUuid());
+        status.setId(statusEntity.getId());
         status.setMilestone(statusEntity.getMilestone().toLocalDateTime());
         status.setStatusEnum(StatusEnum.valueOf(statusEntity.getStatusType().getValue().toUpperCase()));
         User user = new User();
-        user.setUuid(statusEntity.getUser().getUuid());
+        user.setId(statusEntity.getUser().getId());
         status.setUser(user);
         return status;
     }
