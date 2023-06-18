@@ -14,4 +14,5 @@ public class User {
     private List<Password> passwords = new ArrayList<>();
     private List<Status> statuses = new ArrayList<>();
     private List<Event> events = new ArrayList<>();
+    private List<Authority> authorities = new ArrayList<>();
 }

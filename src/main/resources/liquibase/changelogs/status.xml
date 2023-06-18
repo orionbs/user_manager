@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <!-- Status Type Schema -->
+    <changeSet id="status-type-schema" author="orionbs">
+
+        <createTable tableName="status_type">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY_KEY_STATUS_TYPE_ID"/>
+            </column>
+            <column name="value" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="status_type" columnNames="value"
+                             constraintName="UNIQUE_CONSTRAINT_STATUS_TYPE_VALUE"/>
+
+    </changeSet>
+
+    <!-- Status Schema -->
+    <changeSet id="status-schema" author="orionbs">
+
+        <createTable tableName="status">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY_KEY_STATUS_ID"/>
+            </column>
+            <column name="milestone" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="status_type_id" baseTableName="status"
+                                 constraintName="FOREIGN_KEY_STATUS_ON_STATUS_TYPE"
+                                 referencedColumnNames="id" referencedTableName="status_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="status"
+                                 constraintName="FOREIGN_KEY_STATUS_ON_USER"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+
+    </changeSet>
+
+    <!-- Status Type Data -->
+    <changeSet id="status-type-data" author="orionbs">
+
+        <insert tableName="status_type">
+            <column name="value" value="UNVERIFIED"/>
+        </insert>
+
+        <insert tableName="status_type">
+            <column name="value" value="VERIFIED"/>
+        </insert>
+
+        <insert tableName="status_type">
+            <column name="value" value="LOCKED"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

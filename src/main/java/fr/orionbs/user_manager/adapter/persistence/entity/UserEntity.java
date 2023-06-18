@@ -33,4 +33,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     private List<EventEntity> events = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<AuthorityEntity> authorities = new ArrayList<>();
+
 }

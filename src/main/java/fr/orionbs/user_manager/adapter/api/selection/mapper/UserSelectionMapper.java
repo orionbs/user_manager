@@ -31,6 +31,14 @@ public class UserSelectionMapper {
                         .map(EventEnum::toString)
                         .orElse("UNKNOWN")
         );
+        userSelectionResponse.setActualAuthority(
+                user.getAuthorities()
+                        .stream()
+                        .max(Comparator.comparing(Authority::getMilestone))
+                        .map(Authority::getAuthorityEnum)
+                        .map(AuthorityEnum::toString)
+                        .orElse("UNKNOWN")
+        );
         return userSelectionResponse;
     }
 

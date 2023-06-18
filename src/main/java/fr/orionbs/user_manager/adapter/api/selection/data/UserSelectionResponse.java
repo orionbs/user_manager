@@ -10,4 +10,5 @@ public class UserSelectionResponse {
     private String lastName;
     private String actualStatus;
     private String lastEvent;
+    private String actualAuthority;
 }

@@ -1,19 +1,13 @@
 package fr.orionbs.user_manager.adapter.persistence;
 
 import fr.orionbs.user_manager.adapter.persistence.entity.*;
-import fr.orionbs.user_manager.adapter.persistence.exception.ConflictedUserPersistenceException;
-import fr.orionbs.user_manager.adapter.persistence.exception.UnknownEventTypePersistenceException;
-import fr.orionbs.user_manager.adapter.persistence.exception.UnknownStatusTypePersistenceException;
-import fr.orionbs.user_manager.adapter.persistence.exception.UnknownUserPersistenceException;
+import fr.orionbs.user_manager.adapter.persistence.exception.*;
 import fr.orionbs.user_manager.adapter.persistence.mapper.UserPersistenceMapper;
 import fr.orionbs.user_manager.adapter.persistence.repository.*;
 import fr.orionbs.user_manager.application.port.output.ExistUserPort;
 import fr.orionbs.user_manager.application.port.output.InsertUserPort;
 import fr.orionbs.user_manager.application.port.output.SelectUserPort;
-import fr.orionbs.user_manager.domain.model.Event;
-import fr.orionbs.user_manager.domain.model.Password;
-import fr.orionbs.user_manager.domain.model.Status;
-import fr.orionbs.user_manager.domain.model.User;
+import fr.orionbs.user_manager.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +27,12 @@ public class UserPersistenceAdapter implements InsertUserPort, SelectUserPort, E
     private final UserPersistenceMapper userPersistenceMapper;
     private final EventTypeRepository eventTypeRepository;
     private final EventRepository eventRepository;
+    private final AuthorityTypeRepository authorityTypeRepository;
+    private final AuthorityRepository authorityRepository;
 
     @Override
     @Transactional
-    public User insertUser(User user) throws ConflictedUserPersistenceException, UnknownStatusTypePersistenceException, UnknownEventTypePersistenceException {
+    public User insertUser(User user) throws ConflictedUserPersistenceException, UnknownStatusTypePersistenceException, UnknownEventTypePersistenceException, UnknownAuthorityTypePersistenceException {
 
         if (userRepository.existsUserEntityByEmailIgnoreCase(user.getEmail())) {
             throw new ConflictedUserPersistenceException();
@@ -57,6 +53,18 @@ public class UserPersistenceAdapter implements InsertUserPort, SelectUserPort, E
             passwordEntity.setUser(userEntity);
 
             passwordEntity = passwordRepository.save(passwordEntity);
+
+            Authority authority = user.getAuthorities().get(0);
+
+            AuthorityTypeEntity authorityTypeEntity = authorityTypeRepository.findAuthorityTypeEntityByValueIgnoreCase(authority.getAuthorityEnum().toString())
+                    .orElseThrow(UnknownAuthorityTypePersistenceException::new);
+
+            AuthorityEntity authorityEntity = new AuthorityEntity();
+            authorityEntity.setMilestone(Timestamp.valueOf(authority.getMilestone()));
+            authorityEntity.setAuthorityType(authorityTypeEntity);
+            authorityEntity.setUser(userEntity);
+
+            authorityEntity = authorityRepository.save(authorityEntity);
 
             Status status = user.getStatuses().get(0);
 
@@ -85,6 +93,7 @@ public class UserPersistenceAdapter implements InsertUserPort, SelectUserPort, E
             eventEntity = eventRepository.save(eventEntity);
 
             userEntity.getPasswords().add(passwordEntity);
+            userEntity.getAuthorities().add(authorityEntity);
             userEntity.getStatuses().add(statusEntity);
             userEntity.getEvents().add(eventEntity);
 

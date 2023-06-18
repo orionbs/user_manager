@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Authority Type Schema -->
+    <changeSet id="authority-type-schema" author="orionbs">
+
+        <createTable tableName="authority_type">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY_KEY_AUTHORITY_TYPE_ID"/>
+            </column>
+            <column name="value" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="event_type" columnNames="value"
+                             constraintName="UNIQUE_CONSTRAINT_AUTHORITY_TYPE_VALUE"/>
+
+    </changeSet>
+
+    <!-- Authority Schema -->
+    <changeSet id="authority-schema" author="orionbs">
+
+        <createTable tableName="authority">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY_KEY_AUTHORITY_ID"/>
+            </column>
+            <column name="milestone" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_type_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="authority_type_id" baseTableName="authority"
+                                 constraintName="FOREIGN_KEY_AUTHORITY_ON_EVENT_TYPE"
+                                 referencedColumnNames="id" referencedTableName="authority_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="authority"
+                                 constraintName="FOREIGN_KEY_AUTHORITY_ON_USER"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+
+    </changeSet>
+
+    <!-- Authority Type Data -->
+    <changeSet id="authority-type-data" author="orionbs">
+
+        <insert tableName="authority_type">
+            <column name="value" value="ADMINISTRATOR"/>
+        </insert>
+
+        <insert tableName="authority_type">
+            <column name="value" value="MODERATOR"/>
+        </insert>
+
+        <insert tableName="authority_type">
+            <column name="value" value="MEMBER"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

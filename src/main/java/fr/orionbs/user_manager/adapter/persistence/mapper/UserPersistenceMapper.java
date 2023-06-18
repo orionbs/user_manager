@@ -14,6 +14,7 @@ public class UserPersistenceMapper {
     private final PasswordPersistenceMapper passwordPersistenceMapper;
     private final StatusPersistenceMapper statusPersistenceMapper;
     private final EventPersistenceMapper eventPersistenceMapper;
+    private final AuthorityPersistenceMapper authorityPersistenceMapper;
 
     public User toUser(UserEntity userEntity) {
         User user = new User();
@@ -37,6 +38,12 @@ public class UserPersistenceMapper {
                 userEntity.getEvents()
                         .stream()
                         .map(eventPersistenceMapper::toEvent)
+                        .collect(Collectors.toList())
+        );
+        user.setAuthorities(
+                userEntity.getAuthorities()
+                        .stream()
+                        .map(authorityPersistenceMapper::toAuthority)
                         .collect(Collectors.toList())
         );
         return user;

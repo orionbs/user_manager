@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <!-- Event Type Schema -->
+    <changeSet id="event-type-schema" author="orionbs">
+
+        <createTable tableName="event_type">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY_KEY_EVENT_TYPE_ID"/>
+            </column>
+            <column name="value" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="event_type" columnNames="value"
+                             constraintName="UNIQUE_CONSTRAINT_EVENT_TYPE_VALUE"/>
+
+    </changeSet>
+
+    <!-- Event Schema -->
+    <changeSet id="event-schema" author="orionbs">
+
+        <createTable tableName="event">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY_KEY_EVENT_ID"/>
+            </column>
+            <column name="milestone" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ip" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="result" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_type_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="event_type_id" baseTableName="event"
+                                 constraintName="FOREIGN_KEY_EVENT_ON_EVENT_TYPE"
+                                 referencedColumnNames="id" referencedTableName="event_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="event"
+                                 constraintName="FOREIGN_KEY_EVENT_ON_USER"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+
+    </changeSet>
+
+    <!-- Event Type Data -->
+    <changeSet id="event-type-data" author="orionbs">
+
+        <insert tableName="event_type">
+            <column name="value" value="REGISTRATION"/>
+        </insert>
+
+        <insert tableName="event_type">
+            <column name="value" value="AUTHENTICATION"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
